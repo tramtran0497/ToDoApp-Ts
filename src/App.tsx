@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { ToDoForm } from './Components/ToDoForm';
+import { ToDoList } from './Components/ToDoList';
 
 function App() {
-  return (
+  const [toDos, setToDos] = useState<ToDo[]>([]);  
+
+  const addToDo: AddToDo = newToDo => {
+    console.log("inform that receieve new", newToDo)
+    if(newToDo){
+      setToDos([...toDos, {name: newToDo, completed: false}]);
+      return
+    }
+  }
+
+  const toggleComplete: ToggleComplete = (selectedTodo: ToDo) => {
+    const updatedTodos = toDos.map((toDo: ToDo) => {
+      if(toDo.name === selectedTodo.name){
+        return {...toDo, completed: !toDo.completed}
+      }
+      return toDo;
+    })
+    setToDos( updatedTodos);
+  }
+  return ( 
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>To Do App - TS Version</h1>
+      <ToDoForm addToDo={addToDo}/>
+      <ToDoList toDos={toDos} toggleComplete={toggleComplete}/>
     </div>
   );
 }
